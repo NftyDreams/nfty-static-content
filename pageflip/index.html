@@ -1,0 +1,26 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <div id="book" style="margin:auto;">
+
+    </div>
+    <script type="module">
+      import {PageFlip} from './scripts/page-flip.module.js';
+      (async () => {
+        const AWS_BUCKET_URL = 'https://nfty-artworks.s3-us-west-1.amazonaws.com';
+        
+        const response = await fetch(`${AWS_BUCKET_URL}/foundry-g1/foundry-g1-exhibits.json`);
+        const artworks = await response.json();
+        console.log(artworks);
+        const pageFlip = new PageFlip(document.getElementById("book"), {
+          width: 500, // required parameter - base page width
+          height: 750, // required parameter - base page height
+          showCover: true,
+        });
+
+        pageFlip.loadFromImages(artworks.filter((f) => !f.isLandscape && !f.isVideo).map((a) => `${AWS_BUCKET_URL}${a.originalUrl}`));
+      })();
+    </script>
+  </body>
+</html>
